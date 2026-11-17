@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="google" content="notranslate">
+    <title>A2 Reading Comprehension Quiz - Lyn Online School</title>
+    <style>
+        /* Anti-Cheat: Prevent text selection so mobile dictionary/translate popups cannot be triggered */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            box-sizing: border-box;
+        }
+
+        /* Allow typing only in the candidate name input */
+        input[type="text"] {
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header & Timer Bar */
+        header {
+            background-color: #ffffff;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 4px solid #0099db;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .school-logo {
+            height: 65px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .school-title h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #0077b6;
+        }
+
+        .school-title p {
+            margin: 2px 0 0;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        .timer-box {
+            background-color: #d90429;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 25px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .start-screen, .result-screen {
+            text-align: center;
+            padding: 30px 10px;
+        }
+
+        .input-group {
+            margin: 20px auto;
+            max-width: 400px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .rules-box {
+            background-color: #fff3cd;
+            border-left: 5px solid #f59e0b;
+            padding: 15px;
+            text-align: left;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-size: 0.95rem;
+        }
+
+        .reading-passage {
+            background-color: #e8f4f8;
+            border-left: 5px solid #0099db;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 6px;
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        .reading-passage h2 {
+            margin-top: 0;
+            color: #0077b6;
+            font-size: 1.25rem;
+        }
+
+        .question-card {
+            margin-bottom: 22px;
+            padding: 18px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 1.02rem;
+        }
+
+        .option-label {
+            display: block;
+            padding: 10px 12px;
+            margin: 6px 0;
+            background: #fff;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .option-label:hover {
+            background-color: #e0f2fe;
+        }
+
+        .option-label input {
+            margin-right: 10px;
+        }
+
+        .btn {
+            background-color: #0099db;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #0077b6;
+        }
+
+        .btn-submit {
+            background-color: #16a34a;
+            width: 100%;
+            font-size: 1.15rem;
+        }
+
+        .btn-submit:hover {
+            background-color: #15803d;
+        }
+
+        .score-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #0077b6;
+            margin: 15px 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+            color: #444;
+        }
+
+        .signature {
+            font-family: 'Georgia', serif;
+            font-weight: bold;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            color: #111;
+            margin-top: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;" oncopy="return false;" oncut="return false;" onpaste="return false;">
+
+    <header>
+        <div class="header-left">
+            <!-- Ensure your attached image is saved as 'logo.jpeg' in the same folder -->
+            <img src="logo.jpeg" alt="Lyn Languages You Need Logo" class="school-logo">
+            <div class="school-title">
+                <h1>LYN - LANGUAGES YOU NEED</h1>
+                <p>Online School • A2 Reading Comprehension Assessment</p>
+            </div>
+        </div>
+        <div class="timer-box" id="timerDisplay">30:00</div>
+    </header>
+
+    <div class="container">
+        <!-- START SCREEN -->
+        <div id="startScreen" class="start-screen">
+            <h2>A2 English Reading Comprehension Test</h2>
+            <p><strong>Questions:</strong> 20 Multiple Choice | <strong>Time Limit:</strong> 30 Minutes</p>
+
+            <div class="rules-box">
+                <strong>⚠️ Strict Examination Rules:</strong>
+                <ul>
+                    <li>Dictionaries, translators, and spellcheckers are strictly disabled.</li>
+                    <li>Text highlighting and copying are blocked.</li>
+                    <li><strong>Do NOT leave this screen or switch apps</strong> (e.g., to open a dictionary or translator). Leaving the exam window more than once will automatically submit your test.</li>
+                    <li>Your final score will be displayed immediately upon submission and sent to the examiner.</li>
+                </ul>
+            </div>
+
+            <div class="input-group">
+                <label for="candidateName">Candidate Full Name:</label>
+                <input type="text" id="candidateName" placeholder="Enter your full name" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            </div>
+
+            <button class="btn" onclick="startQuiz()">Start Examination</button>
+        </div>
+
+        <!-- QUIZ SCREEN -->
+        <div id="quizScreen" class="hidden">
+            <div class="reading-passage" translate="no">
+                <h2>Reading Text: Modern Supermarkets</h2>
+                <p>Most modern supermarkets are carefully designed to encourage customers to spend more money. For example, fresh fruit, vegetables, and baked goods are often placed near the entrance because their bright colors and pleasant smells create a welcoming atmosphere. Basic necessities like milk, eggs, and bread are usually located at the back of the store. This layout forces shoppers to walk past shelves full of snacks, drinks, and special offers before they reach the items they actually came to buy.</p>
+                <p>In recent years, technology has also transformed the supermarket experience. Many stores now offer self-checkout machines, which allow customers to scan and pay for their own groceries without waiting in long lines. Online grocery shopping and home delivery have also become extremely popular, especially for busy families. Despite these changes, supermarkets remain an essential part of daily life in almost every town and city around the world.</p>
+            </div>
+
+            <form id="quizForm" autocomplete="off" spellcheck="false">
+                <div id="questionsContainer"></div>
+                <button type="button" class="btn btn-submit" onclick="confirmSubmit()">Submit Examination</button>
+            </form>
+        </div>
+
+        <!-- RESULT SCREEN (No Answer Key Shown) -->
+        <div id="resultScreen" class="hidden result-screen">
+            <h2>Examination Submitted</h2>
+            <p>Candidate: <strong id="resultName"></strong></p>
+            <div class="score-display" id="finalScore">0 / 20</div>
+            <p id="percentageScore"></p>
+            <p style="color: #555; font-size: 0.95rem;">Your result has been recorded and prepared for automatic dispatch to the examiner. For security reasons, the answer key is not displayed.</p>
+            
+            <div style="margin-top: 20px;">
+                <button class="btn" onclick="sendToExaminerWhatsApp()">Send Mark via WhatsApp</button>
+                <button class="btn" style="background-color:#4b5563;" onclick="sendToExaminerEmail()">Send Mark via Email</button>
+            </div>
+        </div>
+
+        <footer>
+            <div>Examiner &amp; Authorized Signatory:</div>
+            <div class="signature">P.R. BILONG II</div>
+        </footer>
+    </div>
+
+    <script>
+        // ==========================================
+        // EXAMINER CONTACT DETAILS (EDIT THESE)
+        // ==========================================
+        const EXAMINER_WHATSAPP = "218924919234"; // Number from school logo (without +)
+        const EXAMINER_EMAIL = "examiner@lynschool.com"; // Replace with actual examiner email
+
+        // ==========================================
+        // 20 A2 COMPREHENSION QUESTIONS
+        // ==========================================
+        const questions = [
+            {
+                q: "1. Why are modern supermarkets carefully designed?",
+                options: ["To help customers leave quickly", "To encourage customers to spend more money", "To save electricity", "To make the store look smaller"],
+                answer: 1
+            },
+            {
+                q: "2. Which items are often placed near the entrance?",
+                options: ["Milk, eggs, and bread", "Cleaning products and soap", "Fresh fruit, vegetables, and baked goods", "Frozen meat and fish"],
+                answer: 2
+            },
+            {
+                q: "3. Why are fruits and baked goods placed at the front of the store?",
+                options: ["Because they are heavy", "Because their colors and smells create a welcoming atmosphere", "Because they are the cheapest items", "Because there is no space at the back"],
+                answer: 1
+            },
+            {
+                q: "4. Where are basic necessities usually located?",
+                options: ["Near the entrance", "Outside the supermarket", "At the back of the store", "Next to the self-checkout machines"],
+                answer: 2
+            },
+            {
+                q: "5. Which of the following is mentioned as a 'basic necessity' in the text?",
+                options: ["Snacks", "Drinks", "Eggs", "Fruit"],
+                answer: 2
+            },
+            {
+                q: "6. What does the store layout force shoppers to do?",
+                options: ["Walk past shelves of snacks, drinks, and special offers", "Use online shopping", "Buy only healthy food", "Wait in long lines"],
+                answer: 0
+            },
+            {
+                q: "7. In paragraph 1, what does the word 'layout' refer to?",
+                options: ["The price of food", "The way the store is arranged and organized", "The supermarket workers", "The opening hours"],
+                answer: 1
+            },
+            {
+                q: "8. What has transformed the supermarket experience in recent years?",
+                options: ["Lower prices", "Technology", "Bigger parking lots", "More baked goods"],
+                answer: 1
+            },
+            {
+                q: "9. What can customers do at self-checkout machines?",
+                options: ["Order home delivery", "Bake their own bread", "Scan and pay for their own groceries", "Ask for special offers"],
+                answer: 2
+            },
+            {
+                q: "10. What is one benefit of self-checkout machines mentioned in the text?",
+                options: ["Groceries are free", "Customers avoid waiting in long lines", "Store workers pack your bags", "Fruits stay fresher"],
+                answer: 1
+            },
+            {
+                q: "11. Which new services have become extremely popular?",
+                options: ["Night shopping and free snacks", "Online grocery shopping and home delivery", "Cooking classes in stores", "Phone repairs"],
+                answer: 1
+            },
+            {
+                q: "12. Who finds online grocery shopping and home delivery especially popular?",
+                options: ["Store managers", "Tourists", "Busy families", "Delivery drivers"],
+                answer: 2
+            },
+            {
+                q: "13. According to the last sentence, how important are supermarkets today?",
+                options: ["They are disappearing quickly", "They are only found in big cities", "They remain an essential part of daily life", "They are only used for snacks"],
+                answer: 2
+            },
+            {
+                q: "14. Where can supermarkets be found according to the text?",
+                options: ["Only in Europe", "In almost every town and city around the world", "Only in small villages", "Only online"],
+                answer: 1
+            },
+            {
+                q: "15. In the text, the word 'pleasant' (paragraph 1) is closest in meaning to:",
+                options: ["Bad", "Nice and enjoyable", "Expensive", "Strong and ugly"],
+                answer: 1
+            },
+            {
+                q: "16. In the text, 'groceries' (paragraph 2) means:",
+                options: ["Electronic machines", "Food and household items bought at a store", "Delivery trucks", "Bank cards"],
+                answer: 1
+            },
+            {
+                q: "17. In the text, 'essential' (paragraph 2) means:",
+                options: ["Very important and necessary", "Boring", "Difficult", "Expensive"],
+                answer: 0
+            },
+            {
+                q: "18. True or False: Bread is usually placed right next to the entrance.",
+                options: ["True", "False"],
+                answer: 1
+            },
+            {
+                q: "19. True or False: Supermarkets put snacks along the way so shoppers might buy extra things.",
+                options: ["True", "False"],
+                answer: 0
+            },
+            {
+                q: "20. What is the main topic of the reading text?",
+                options: ["How to cook healthy meals", "How supermarkets are designed and how technology is changing them", "Why online shopping is bad for cities", "The history of milk and bread"],
+                answer: 1
+            }
+        ];
+
+        let timeRemaining = 30 * 60; // 30 minutes in seconds
+        let timerInterval;
+        let quizActive = false;
+        let tabSwitchWarnings = 0;
+        let candidateName = "";
+        let finalMark = 0;
+
+        // Render Questions dynamically
+        function renderQuestions() {
+            const container = document.getElementById("questionsContainer");
+            container.innerHTML = "";
+            questions.forEach((item, index) => {
+                let optionsHTML = "";
+                item.options.forEach((opt, optIndex) => {
+                    optionsHTML += `
+                        <label class="option-label" translate="no">
+                            <input type="radio" name="q${index}" value="${optIndex}">
+                            ${opt}
+                        </label>
+                    `;
+                });
+
+                container.innerHTML += `
+                    <div class="question-card" translate="no">
+                        <div class="question-text">${item.q}</div>
+                        ${optionsHTML}
+                    </div>
+                `;
+            });
+        }
+
+        // Start Quiz
+        function startQuiz() {
+            const nameInput = document.getElementById("candidateName").value.trim();
+            if (!nameInput) {
+                alert("Please enter your full name before starting the examination.");
+                return;
+            }
+            candidateName = nameInput;
+            renderQuestions();
+
+            document.getElementById("startScreen").classList.add("hidden");
+            document.getElementById("quizScreen").classList.remove("hidden");
+
+            quizActive = true;
+            startTimer();
+        }
+
+        // Countdown Timer (30 Minutes)
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                let minutes = Math.floor(timeRemaining / 60);
+                let seconds = timeRemaining % 60;
+                document.getElementById("timerDisplay").textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Time is up! Your test is being submitted automatically.");
+                    submitQuiz();
+                }
+            }, 1000);
+        }
+
+        // Anti-Cheat: Detect if student switches apps (e.g., opens phone dictionary/translator)
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden && quizActive) {
+                tabSwitchWarnings++;
+                if (tabSwitchWarnings === 1) {
+                    alert("SECURITY WARNING: Switching apps, dictionaries, or translators is strictly prohibited! One more violation will automatically submit your exam.");
+                } else if (tabSwitchWarnings >= 2) {
+                    alert("SECURITY VIOLATION: You left the exam screen again. Your examination is now automatically submitted.");
+                    submitQuiz();
+                }
+            }
+        });
+
+        // Disable keyboard shortcuts (Ctrl+C, Ctrl+U, F12, etc.)
+        document.addEventListener("keydown", (e) => {
+            if (quizActive && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+            }
+        });
+
+        function confirmSubmit() {
+            if (confirm("Are you sure you want to submit your examination? You cannot change your answers afterward.")) {
+                submitQuiz();
+            }
+        }
+
+        // Calculate Score & Lock Quiz
+        function submitQuiz() {
+            if (!quizActive) return;
+            quizActive = false;
+            clearInterval(timerInterval);
+
+            let score = 0;
+            questions.forEach((item, index) => {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                if (selected && parseInt(selected.value) === item.answer) {
+                    score++;
+                }
+            });
+
+            finalMark = score;
+            const percentage = Math.round((score / questions.length) * 100);
+
+            document.getElementById("quizScreen").classList.add("hidden");
+            document.getElementById("resultScreen").classList.remove("hidden");
+            document.getElementById("resultName").textContent = candidateName;
+            document.getElementById("finalScore").textContent = `${score} / ${questions.length}`;
+            document.getElementById("percentageScore").textContent = `Percentage: ${percentage}%`;
+
+            // Automatically trigger sharing with examiner immediately after submission
+            sendToExaminerWhatsApp();
+        }
+
+        function getReportMessage() {
+            const percentage = Math.round((finalMark / questions.length) * 100);
+            return `LYN ONLINE SCHOOL - A2 EXAM RESULT\n` +
+                   `Candidate: ${candidateName}\n` +
+                   `Score: ${finalMark} / ${questions.length} (${percentage}%)\n` +
+                   `Examiner: P.R. BILONG II`;
+        }
+
+        function sendToExaminerWhatsApp() {
+            const text = encodeURIComponent(getReportMessage());
+            window.open(`https://wa.me/${EXAMINER_WHATSAPP}?text=${text}`, "_blank");
+        }
+
+        function sendToExaminerEmail() {
+            const subject = encodeURIComponent(`A2 Quiz Result - ${candidateName}`);
+            const body = encodeURIComponent(getReportMessage());
+            window.location.href = `mailto:${EXAMINER_EMAIL}?subject=${subject}&body=${body}`;
+        }
+    </script>
+</body>
+</html>
